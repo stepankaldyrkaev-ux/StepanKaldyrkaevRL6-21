@@ -44,3 +44,12 @@ int getMaxBit(const int* array, int N){
 	else
 		return(ind_max);
 }
+unsigned char getCount1Bit(int number){
+	unsigned char one = 0;
+	unsigned int a = number;
+	for(int j=0; j<32; j++){
+		one = one + (a%2==0? 0 : 1);
+		a = a>>1;
+	}
+	return(one);
+}
