@@ -7,3 +7,40 @@ void swapHalfWord(unsigned int* words){
 	b = b<<16;
 	*words = a+b;
 }
+void cycleShift(int* number, int N, int left){
+	int b;
+	if (left==1){
+		for(int i=0; i<N; i++){
+			b = ((*number>>31)%2==0? 0 : 1);
+			*number = (*number<<1) + b;
+		}
+	}
+	if (left==0){
+		for(int i=0; i<N; i++){
+			b = (*number%2==0? 0 : 1);
+			*number = (*number>>1) + (b<<31);
+		}
+	}
+}
+int getMaxBit(const int* array, int N){
+	int one = 0;
+	unsigned int a;
+	int ind_max;
+	int max = -1;
+	for(int i=0; i<N; i++){
+		if(array[i]>=0){
+			a=array[i];
+			for(int j=0; j<32; j++){
+				one = one + (a%2==0? 0 : 1);
+				a = a>>1;
+			}
+			ind_max = (max<one? i : ind_max);
+			max = (max<one? one : max);
+			one = 0;
+		}
+	}
+	if(max = -1)
+		return(-1);
+	else
+		return(ind_max);
+}
