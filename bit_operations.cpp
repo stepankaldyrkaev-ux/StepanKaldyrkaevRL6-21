@@ -80,3 +80,9 @@ void cycleShiftArray(int* array, int size, int N, bool left){
 		array[j] = (a<0? ~a + 1 : a);
 	}
 }
+void setBit(int* number, int numBit){
+	*number = *number|(1<<numBit);
+}
+void clearBit(int* number, int numBit){
+	*number = ((*number>>numBit)%2==1? *number - (1<<numBit) : *number); 
+}
