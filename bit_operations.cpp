@@ -13,7 +13,6 @@ void cycleShift(int* number, int N, int left){
 	int a;
 	int b;
 	a = *number;
-	a = (a<0? ~(a-1) : a);
 	if (left==1){
 		for(int i=0; i<N; i++){
 			b = ((a>>31)%2==0? 0 : 1);
@@ -26,7 +25,7 @@ void cycleShift(int* number, int N, int left){
 			a = (a>>1) + (b<<31);
 		}
 	}
-	*number = (a<0? ~a + 1 : a);
+	*number = a;
 }
 int getMaxBit(const int* array, int N){
 	int one = 0;
@@ -61,23 +60,23 @@ unsigned char getCount1Bit(int number){
 }
 void cycleShiftArray(int* array, int size, int N, bool left){
 	int a;
-	int b;
-	for(int j=0; j<size; j++){
-		a = array[j];
-		a = (a<0? ~(a-1) : a);
-		if (left==1){
-			for(int i=0; i<N; i++){
-				b = ((a>>31)%2==0? 0 : 1);
-				a = (a<<1) + b;
+	if (left==1){
+		for(int i=0; i<N; i++){
+			for(int j = 0; j<size; j++){
+				if(j==0)
+					a = ((array[j]>>31)%2==0? 0 : 1);
+				array[j] = (array[j]<<1) + ((j==size-1)? a : ((array[j+1]>>31)%2==0? 0 : 1));	
 			}
 		}
-		if (left==0){
-			for(int i=0; i<N; i++){
-				b = (a%2==0? 0 : 1);
-				a = (a>>1) + (b<<31);
+	}
+	if (left==0){
+		for(int i=0; i<N; i++){
+			for(int j = size-1; j>=0; j--){
+				if(j==size-1)
+					a = (array[j]%2==0? 0<<31 : 1<<31);
+				array[j] = (array[j]>>1) + ((j==0)? a : (array[j-1]%2==0? 0<<31 : 1<<31));	
 			}
 		}
-		array[j] = (a<0? ~a + 1 : a);
 	}
 }
 void setBit(int* number, int numBit){
