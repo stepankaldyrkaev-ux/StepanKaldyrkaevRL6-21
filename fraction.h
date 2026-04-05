@@ -15,9 +15,4 @@ struct Fraction {
 	}
 };
 int fracReduction(Fraction& frac);
-
-
-
-
-
 #endif

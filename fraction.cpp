@@ -2,8 +2,8 @@
 #include <iostream>
 #include <stdio.h>
 int fracReduction(Fraction& frac){
-	int a = frac._numerator;
-	int b = frac._denominator;
+	int a = abs(frac._numerator);
+	int b = abs(frac._denominator);
 	while((a!=b)&&(a!=0)){
 		if(a>b){
 			a = a - b;
