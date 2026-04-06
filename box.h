@@ -32,6 +32,6 @@ struct Box {
 	}
 };
 void writeToFile(const char* fileName, const struct Box& box);
-void readFromFile(const char* fileName, struct Box& box);
+void readFromFile(const char* fileName, struct Box* box);
 
 #endif

@@ -47,7 +47,7 @@ struct Fraction {
 	}
 };
 void writeToFile(const char* fileName, const struct Box& box);
-void readFromFile(const char* fileName, struct Box& box);
+void readFromFile(const char* fileName, struct Box* box);
 int fracReduction(Fraction& frac);
 Fraction sum(const Fraction& fr1, const Fraction& fr2);
 Fraction sub(const Fraction& fr1, const Fraction& fr2);

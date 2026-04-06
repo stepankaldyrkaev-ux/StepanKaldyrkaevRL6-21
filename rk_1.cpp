@@ -4,24 +4,21 @@
 void writeToFile(const char* fileName, const struct Box& box){
 	FILE *file;
 	file = fopen(fileName,"w");
-	fprintf(file,"%i", box._len);
-	fprintf(file,"%s","\n");
-	fprintf(file,"%i", box._width);
-	fprintf(file,"%s","\n");
-	fprintf(file,"%i", box._height);
-	fprintf(file,"%s","\n");
-	fprintf(file,"%i", box._color);
-	fprintf(file,"%s","\n");
-	fclose(file);
+	if(file){
+		fprintf(file,"%i %i %i %i",box._len,box._width,box._height,box._color);
+		fclose(file);
+	}
 }
-void readFromFile(const char* fileName, struct Box& box){
+void readFromFile(const char* fileName, struct Box* box){
+	if(box == NULL){
+		return;
+	}
 	FILE *file;
     file = fopen(fileName,"r");
-    fscanf(file,"%i", &box._len);
-    fscanf(file,"%i", &box._width);
-    fscanf(file,"%i", &box._height);
-    fscanf(file,"%i", &box._color);
-    fclose(file);
+	if(file){
+		fscanf(file,"%i %i %i %i", &box->_len, &box->_width, &box->_height, &box->_color);
+        fclose(file);
+	}
 }
 int fracReduction(Fraction& frac){
 	int a = abs(frac._numerator);
