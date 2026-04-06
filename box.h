@@ -1,6 +1,6 @@
 #ifndef _box_h_
 #define _box_h_
-
+using namespace std;
 #include <iostream>
 struct Box {
 	int _len;

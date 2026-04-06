@@ -4,7 +4,7 @@
 int fracReduction(Fraction& frac){
 	int a = abs(frac._numerator);
 	int b = abs(frac._denominator);
-	while((a!=b)&&(a!=0)){
+	while((a!=b)&&(a*b!=0)){
 		if(a>b){
 			a = a - b;
 		}
@@ -12,7 +12,7 @@ int fracReduction(Fraction& frac){
 			b = b - a;
 		}
 	}
-	if (a == 0){
+	if (a*b == 0){
 		return -1;
 	}
 	else{
@@ -21,3 +21,4 @@ int fracReduction(Fraction& frac){
 		return 0;
 	}
 }
+
