@@ -1,5 +1,5 @@
-#ifndef _box_h_
-#define _box_h_
+#ifndef _rk_1_h_
+#define _rk_1_h_
 using namespace std;
 #include <iostream>
 struct Box {
@@ -31,7 +31,27 @@ struct Box {
 	return out;
 	}
 };
+struct Fraction {
+	int _numerator;
+	int _denominator;
+	friend ostream& operator<<(ostream& out, const Fraction& fr){
+		return out << fr._numerator << "/" << fr._denominator;
+	}
+	Fraction(){
+		_numerator = 1;
+		_denominator = 1;
+	}
+	Fraction(int numerator, int denominator){
+		_numerator = numerator;
+		_denominator = denominator;
+	}
+};
 void writeToFile(const char* fileName, const struct Box& box);
 void readFromFile(const char* fileName, struct Box& box);
+int fracReduction(Fraction& frac);
+Fraction sum(const Fraction& fr1, const Fraction& fr2);
+Fraction sub(const Fraction& fr1, const Fraction& fr2);
+Fraction div(const Fraction& fr1, const Fraction& fr2);
+Fraction mul(const Fraction& fr1, const Fraction& fr2);
 
 #endif
