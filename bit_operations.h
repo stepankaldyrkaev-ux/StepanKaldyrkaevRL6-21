@@ -2,6 +2,7 @@
 #define _bit_operations_h_
 
 #include <iostream>
+bool isPalindromNumber(const int number);
 
 void swapHalfWord(unsigned int* words);
 void cycleShift(int* number, int N, int left);

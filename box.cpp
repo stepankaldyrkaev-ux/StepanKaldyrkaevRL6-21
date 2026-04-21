@@ -1,6 +1,7 @@
 #include "box.h"
 #include <iostream>
 #include <stdio.h>
+int Box::_count = 0;
 void writeToFile(const char* fileName, const struct Box& box){
 	FILE *file;
 	file = fopen(fileName,"w");

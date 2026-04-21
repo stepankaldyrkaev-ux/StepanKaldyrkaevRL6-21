@@ -85,3 +85,15 @@ void setBit(int* number, int numBit){
 void clearBit(int* number, int numBit){
 	*number = ((*number>>numBit)%2==1? *number - (1<<numBit) : *number); 
 }
+bool isPalindromNumber(const int number){
+	unsigned int n1 = number;
+	unsigned int n2 = 0;
+	for(int i = 0; i < 16; i++){
+		n2 = n2 + ((n1>>i)%2==1? abs((1<<(31-i))) : 0) + ((n1>>(31-i))%2==1? abs((1<<i)) : 0);
+	}
+	std::cout << hex<< n2 << "\n";
+	if((n1-n2)==0)
+		return 1;
+	else
+		return 0;
+}
