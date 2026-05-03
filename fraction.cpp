@@ -12,7 +12,12 @@ int fracReduction(Fraction& frac){
 			b = b - a;
 		}
 	}
-	if (a*b == 0){
+	if (a == 0){
+		frac._numerator = 0;
+		frac._denominator = 1;
+		return 0;
+	}
+	if (b == 0){
 		return -1;
 	}
 	else{
