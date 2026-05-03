@@ -49,4 +49,15 @@ Fraction mul(const Fraction& fr1, const Fraction& fr2){
 	int res = fracReduction(fr3);
 	return fr3;
 }
+ostream& operator<<(ostream& out, const Fraction& fr){
+	return out << fr._numerator << "/" << fr._denominator;
+}
+Fraction::Fraction(){
+	_numerator = 1;
+	_denominator = 1;
+}
+Fraction::Fraction(int numerator, int denominator){
+	_numerator = numerator;
+	_denominator = denominator;
+}
 
