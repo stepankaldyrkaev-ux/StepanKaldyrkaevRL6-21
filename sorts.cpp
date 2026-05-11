@@ -73,10 +73,8 @@ void merge(int* ar, int suke, int mid, bool (*comp)(int,int)){
 	}
 	for (i = 0; i < k; i++){
 		ar[i] = mergedar[i];
-		//std::cout<<ar[i]<<" ";
 	}
-	//std::cout<<"\n";
-	delete mergedar;
+	delete[] mergedar;
 }
 bool comp_asc(int a, int b){
 	return(b>=a);
@@ -184,6 +182,6 @@ void countSort(int* ar, int size, bool (*comp)(int,int)){
 		}
 		(comp(0,1)? i++ : i--);
 	}
-	delete count;
+	delete[] count;
 }	
 	
