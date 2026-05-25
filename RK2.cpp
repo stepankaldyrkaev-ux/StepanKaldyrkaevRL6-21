@@ -24,10 +24,9 @@ int main(int argc, char* argv[]){
 	bool diff = false;
 	bool aver = false;
 	bool normal = false;
-	int numNode;
+	int numNode = 1;
 	int start = 10;
 	int end = 90;
-	int strtNode = 1;
 	int kolNode = 3;
 	enum SaveTo save = show;
 	if(argc>2){
@@ -44,8 +43,6 @@ int main(int argc, char* argv[]){
 				end = atoi(argv[i+1]);
 			if(strcmp("--normalize", argv[i])==0)
 				normal = (strcmp("true", argv[i+1])==0? true : false);
-			if(strcmp("--startNode", argv[i])==0)
-				strtNode = atoi(argv[i+1]);
 			if(strcmp("--kolNode", argv[i])==0)
 				kolNode = atoi(argv[i+1]);
 			if(strcmp("--SaveTo", argv[i])==0){
@@ -58,14 +55,15 @@ int main(int argc, char* argv[]){
 			}
 		}
 	}
-	plot.buildPulse(pulse.getPulse(7,normal), save);
+	plot.buildPulse(pulse.getPulse(numNode,normal), save, "Pulse");
 	if(diff){
-		plot.buildPulse(pulse.diffPulse(7), save, "Diff Pulse");
+		plot.buildPulse(pulse.diffPulse(numNode), save, "Diff_Pulse");
 	}
-	/*if(aver){
-		plot.buildPulse(pulse.diffPulse(7), save, "Aver Pulse");
-	}*/
+	if(aver){
+		plot.buildPulse(pulse.averPulse(numNode, kolNode), save, "Aver_Pulse");
+	}
 	std::cout<<"Rise time duration: "<<pulse.getRiseTime(numNode)<<"\n";
 	std::cout<<"Fail time duration: "<<pulse.getFailTime(numNode)<<"\n";
-	std::cout<<"Integration of pulse from "<<start<<"% to "<<end<<"%:"<<pulse.intPulse(numNode,start,end)<<"\n";
+	std::cout<<"Duration of pulse from "<<start<<"% to "<<end<<"%: "<<pulse.getDurPulse(numNode,start,end)<<"\n";
+	std::cout<<"Integration of pulse from "<<start<<"% to "<<end<<"%: "<<pulse.intPulse(numNode,start,end)<<"\n";
 }

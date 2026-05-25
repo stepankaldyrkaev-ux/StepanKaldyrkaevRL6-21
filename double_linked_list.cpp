@@ -99,6 +99,37 @@ std::vector<std::pair<double,double>> DoubleLinkedList::get_Node(int num_node) c
 int DoubleLinkedList::getCountNodes() const{
 	return countNodes;
 }
+void DoubleLinkedList::insert(const Data* d, int num_node){
+	Node* p = new Node(d,num_node);
+	if ((Head==nullptr)&&(num_node==0)) {
+		Head = p;
+		Tail = p;
+		return;
+	}
+	if(num_node<0){
+		this->push_front(d);
+		return;
+	}
+	if(num_node>countNodes){
+		this->push_back(d);
+		return;
+	}
+	Node* cur = Head;
+	while (cur && cur->number != num_node-1){
+		 cur = cur->next;
+	}
+	Node* buf = cur->next;
+	buf->prev = p;
+	p->next = buf;
+	cur->next = p;
+	p->prev = cur;
+	while (buf && buf!= Tail){
+		 buf->number++;
+		 buf = buf->next;
+	}
+	buf->number++;
+	countNodes++;
+}
 ProcessPulses::ProcessPulses(const char* fileName):DoubleLinkedList(){
 	std::ifstream file(fileName, std::ios::binary | std::ios::ate);
 	long int size = file.tellg();
@@ -178,21 +209,45 @@ std::vector<std::pair<double,double>> ProcessPulses::diffPulse(int numNode) cons
 	diff.push_back(std::pair<double, double>(pulse[size-1].first, pulse[size-2].second));
 	return diff;
 }
+std::vector<std::pair<double,double>> ProcessPulses::averPulse(int startNode, int countNode) const{
+	std::vector<std::pair<double,double>> result;
+	std::vector<int> count;
+	for(int i=startNode; i<startNode+countNode; i++){
+		std::vector<std::pair<double,double>> pulse = this->get_Node(i);
+		for(int j = 0; j<result.size(); j++){
+			result[j].second+=pulse[j].second;
+			count[j]++;
+		}
+		int size = result.size();
+		for(int k = size; k<pulse.size(); k++){
+			result.push_back(std::pair<double, double>(pulse[k].first, pulse[k].second));
+			count.push_back(1);
+		}
+	}
+	for(int j = 0; j<result.size(); j++){
+		result[j].second=result[j].second/(double)count[j];
+	}
+	return result;
+}
 double ProcessPulses::intPulse(int numNode, int start, int end) const{
 	std::vector<std::pair<double,double>> pulse = this->get_Node(numNode);
 	int i=0;
 	double result = 0;
+	bool getAm = true;
+	double Amp = this->getAmpl(numNode);
 	if((start<0)||(end<0)){
 		start = 0;
 		end = 0;
 	}
-	double st = (double(start)/100)*(this->getAmpl(numNode));
-	double en = (double(end)/100)*(this->getAmpl(numNode));
+	double st = (double(start)/100)*(Amp);
+	double en = (double(end)/100)*(Amp);
 	while(pulse[i].second<=st){
 		i++;
 	}
-	for(int j = i;((st>en)||(st==en)? (pulse[j].second>=en) : (pulse[j].second<=en))&&(j<pulse.size()); j++ ){
+	for(int j = i;((getAm||(pulse[j].second>=en))&&(j<pulse.size())); j++ ){
 		result+=pulse[j].second*(0.001);
+		if(getAm&&(pulse[j].second==Amp))
+			getAm = false;
 	}
 	return result;
 }
@@ -245,8 +300,35 @@ int ProcessPulses::getCountPulse() const{
 	int kol = this->getCountNodes();
 	return kol;
 }
+double ProcessPulses::getDurPulse(int numNode, int start, int end) const{
+	std::vector<std::pair<double,double>> pulse = this->get_Node(numNode);
+	int i=0;
+	double result = 0;
+	bool getAm = true;
+	double Amp = this->getAmpl(numNode);
+	if((start<0)||(end<0)){
+		start = 0;
+		end = 0;
+	}
+	double st = (double(start)/100)*(Amp);
+	double en = (double(end)/100)*(Amp);
+	while(pulse[i].second<=st)
+		i++;
+	double time_start = pulse[i].first;
+	while((getAm||(pulse[i].second>=en))&&(i<pulse.size())){
+		i++;
+		if(getAm&&(pulse[i].second==Amp))
+			getAm = false;
+	}
+	double time_end = pulse[i].first;
+	return (time_end-time_start);
+}
 void Gnuplot::buildPulse(const std::vector<std::pair<double,double>>& pulse, enum SaveTo paramToSave, const char* filename){
     FILE* file = fopen("test.dat", "w");
+	char PngOutput[100];
+	sprintf(PngOutput, "set output '%s.png'\n", filename);
+	char JpegOutput[100];
+	sprintf(JpegOutput, "set output '%s.jpg'\n", filename);
 	const int size = pulse.size();
     for (int i = 0; i < size; i++) {
         double t = pulse[i].first;
@@ -255,11 +337,11 @@ void Gnuplot::buildPulse(const std::vector<std::pair<double,double>>& pulse, enu
     }
     fclose(file);
 	FILE* script = fopen("plot.gp", "w");
-    fprintf(script, "set terminal wxt\n");
+    fprintf(script, "set terminal %s\n",(paramToSave==show? "wxt" : (paramToSave==png? "png size 1024,768" : "jpeg size 1024,768")));
     fprintf(script, "set title '%s'\n", filename);
+	fprintf(script, "%s",(paramToSave==show? "" : (paramToSave==png? PngOutput : JpegOutput)));
     fprintf(script, "plot 'test.dat' using 1:2 with lines\n");
-    fprintf(script, "pause -1 'Press enter to close window'\n");
+    fprintf(script, "pause -1 '%sPress enter to continue'\n", (paramToSave!=show? "Saved to file, " : ""));
     fclose(script);
     system("gnuplot plot.gp");
-	//getchar();
 }

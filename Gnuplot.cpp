@@ -8,6 +8,9 @@
 #include <utility>
 #include <fstream>
 #include <cstdio>
+Gnuplot::Gnuplot(const char* ImageName){
+	_ImageName = ImageName;
+}
 void Gnuplot::buildGraph(CircuitWork* voltage, bool constant, bool Jpeg, bool charge, bool discharge){
 	FILE* file = fopen("test.dat", "w");
 	double _T = voltage->getPeriod();
@@ -28,7 +31,18 @@ void Gnuplot::buildGraph(CircuitWork* voltage, bool constant, bool Jpeg, bool ch
     }
     fclose(file);
 	FILE* script = fopen("plot.gp", "w");
-    fprintf(script, "set terminal wxt\n");
+    //fprintf(script, "set terminal wxt\n");
+	if(Jpeg){
+	fprintf(script, "set terminal jpeg size 1024,768\n");
+	fprintf(script, "set output '%s.jpg'\n",_ImageName);
+	fprintf(script, "set multiplot\n");
+    fprintf(script, "set title 'Circuit Work'\n");
+	fprintf(script, "set palette defined (0 'green', 1 'blue', 2 'red', 3 'orange')\n");
+    fprintf(script, "plot %s\n", (constant==true? v1 : (charge&&discharge == true? v2 : (charge + discharge==false? v5 : (charge==true? v4 : v3)))));
+	fprintf(script, "unset multiplot\n");
+	fprintf(script, "replot\n");
+	}
+	fprintf(script, "set terminal wxt\n");
 	fprintf(script, "set multiplot\n");
     fprintf(script, "set title 'Circuit Work'\n");
 	fprintf(script, "set palette defined (0 'green', 1 'blue', 2 'red', 3 'orange')\n");
@@ -37,5 +51,4 @@ void Gnuplot::buildGraph(CircuitWork* voltage, bool constant, bool Jpeg, bool ch
     fprintf(script, "pause -1 'Press enter to close window'\n");
     fclose(script);
     system("gnuplot plot.gp");
-	//getchar();
 }

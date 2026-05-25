@@ -43,7 +43,7 @@ double Pristavochka(char s){
 };
 int main(int argc, char* argv[]){
 	enum TypeSignal signal = sinus;
-	Gnuplot plot;
+	Gnuplot plot("graph");
 	double R1 = 1000;
 	double R2 = 10;
 	double C1 = 0.001;

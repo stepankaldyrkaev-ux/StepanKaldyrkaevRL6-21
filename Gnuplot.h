@@ -12,9 +12,9 @@
 #include <cstdio>
 class Gnuplot {
 	private :
-	/*можно добавлять любые функции и переменные*/
+	const char* _ImageName; 
 	public :
-	/*можно добавлять любые функции и переменные*/
+	Gnuplot(const char* ImageName);
 	
 	void buildGraph(CircuitWork* voltage, bool constant = false, bool Jpeg = false, bool charge = true, bool discharge = true);
 };
